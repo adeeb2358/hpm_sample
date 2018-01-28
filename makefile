@@ -10,6 +10,7 @@ LOG_FILE  			= output.txt
 REDIRECT_COMMAND 	= 2>&1 | tee -a
 SRC_FILES           = $(wildcard *.cpp)
 OBJ_FILES           = $(patsubst %.cpp,%.o,$(SRC_FILES))
+OBJ_FILES_ASM 		=$(patsubst %.cpp,%.s,$(SRC_FILES))
 OBJ_FILES_WITH_PATH = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 
 #variables for binary directory creation
@@ -22,6 +23,9 @@ CCFLAGS             = -g -DEBUG -pthread -mavx
 #-msse3
 CORE_FILE 			= core
 
+ASMFLAGS 			= -S  -mavx
+ASM_DIR 			= asm
+MAKE_ASM_DIR 		= if [ ! -d "$(ASM_DIR)/" ]; then $(MKDIR_P) $(ASM_DIR); fi;
 #variables for git commiting
 MAKE_FILE_PATH 		:= $(abspath $(lastword $(MAKEFILE_LIST)))
 CURRENT_DIR 		:= $(notdir $(patsubst %/,%,$(dir $(MAKE_FILE_PATH))))
@@ -54,10 +58,17 @@ directory:
 	@ touch $(LOG_FILE) 
 	@ $(MAKE_MAIN_EXE_DIR)
 	@ $(MAKE_OBJ_DIR) 
+	@ $(MAKE_ASM_DIR)
 
 
-main:build_objects build_main
+main:build_objects build_main build_asm
 	
+build_asm:$(OBJ_FILES_ASM)
+
+$(OBJ_FILES_ASM):	
+	@ echo "making asm" $*.cpp $(REDIRECT_COMMAND) $(LOG_FILE)
+	@ $(CC) $(ASMFLAGS)  $*.$(FILE_EXTENSION) -o $(ASM_DIR)/$@   $(REDIRECT_COMMAND)  $(LOG_FILE)
+
 build_objects:$(OBJ_FILES)
 
 build_main:

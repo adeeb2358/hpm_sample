@@ -33,6 +33,12 @@ std::string getCpuName(){
 	return "";
 }
 
+
+auto optimization()->void{
+	const int length = 1024*1024*64;
+	return;
+}
+
 auto hpm_sample()->void{
 
 	auto cpuName = getCpuName();
@@ -118,6 +124,8 @@ auto hpm_sample()->void{
     }catch(std::exception &e){
     	std::cout <<"Cant do this operation\n";
     }
-   
+   	
+   	optimization();
+
 	return ;
 }
