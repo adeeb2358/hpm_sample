@@ -23,7 +23,7 @@ CCFLAGS             = -g -DEBUG -pthread -mavx
 #-msse3
 CORE_FILE 			= core
 
-ASMFLAGS 			= -S  -mavx
+ASMFLAGS 			= -S  -mavx 
 ASM_DIR 			= asm
 MAKE_ASM_DIR 		= if [ ! -d "$(ASM_DIR)/" ]; then $(MKDIR_P) $(ASM_DIR); fi;
 #variables for git commiting
@@ -74,12 +74,12 @@ build_objects:$(OBJ_FILES)
 build_main:
 	
 	@ echo "building main" $^ $(REDIRECT_COMMAND) $(LOG_FILE)
-	@ $(CC) $(CCFLAGS) -o $(MAIN_EXE_FILE) $(OBJ_FILES_WITH_PATH)  $(REDIRECT_COMMAND) $(LOG_FILE)
+	@ $(CC) -o3 $(CCFLAGS) -o $(MAIN_EXE_FILE) $(OBJ_FILES_WITH_PATH)  $(REDIRECT_COMMAND) $(LOG_FILE)
 
 $(OBJ_FILES):
 	
 	@ echo "compiling" $*.cpp $(REDIRECT_COMMAND) $(LOG_FILE)
-	@ $(CC)  $(CCFLAGS) -c  $*.$(FILE_EXTENSION) -o $(OBJ_DIR)/$@   $(REDIRECT_COMMAND)  $(LOG_FILE)
+	@ $(CC) -o3 $(CCFLAGS) -c  $*.$(FILE_EXTENSION) -o $(OBJ_DIR)/$@   $(REDIRECT_COMMAND)  $(LOG_FILE)
 
 .PHONY:	clean
 	
