@@ -108,5 +108,16 @@ auto hpm_sample()->void{
         std::cout << temp3[i] << std::endl;
     }   
 
+    /*
+		-mvax compiler option is needed to work
+		with _m256d
+    */
+    try{
+    	__m256d z = _mm256_set_pd(1,2,3,4);
+
+    }catch(std::exception &e){
+    	std::cout <<"Cant do this operation\n";
+    }
+   
 	return ;
 }

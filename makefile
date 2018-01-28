@@ -18,7 +18,7 @@ MAKE_OBJ_DIR        = if [ ! -d "$(OBJ_DIR)/" ]; then  $(MKDIR_P) $(OBJ_DIR); fi
 MAKE_MAIN_EXE_DIR   = if [ ! -d "$(MAIN_EXE)/" ]; then $(MKDIR_P) $(MAIN_EXE); fi;
 
 #variables for debugging
-CCFLAGS             = -g -DEBUG -pthread 
+CCFLAGS             = -g -DEBUG -pthread -mavx
 #-msse3
 CORE_FILE 			= core
 
