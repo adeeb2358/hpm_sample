@@ -14,5 +14,11 @@
 	std::chrono library
 */
 
-#include<chrono>
+#include <chrono>
+#include <omp.h>
+
 #endif // BIG_HEADER_H
+
+/*
+	sudo apt-get install libopenblas-dev
+*/

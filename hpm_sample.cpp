@@ -129,3 +129,8 @@ auto hpm_sample()->void{
 
 	return ;
 }
+
+
+auto open_mp()-> void{
+	return;
+}
