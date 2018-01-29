@@ -131,6 +131,31 @@ auto hpm_sample()->void{
 }
 
 
+void parallel_for(){
+	const int length = 1024 * 1024 *64;
+	float *a         = new float[length];
+	float *b         = new float[length];
+	float *c         = new float[length];
+	float *result    = new float[length];
+
+	/*
+		cant use size_t for the forloop
+		its not supported by omp
+	*/
+	#pragma omp parallel for
+
+	for(unsigned long int i = 0;i < length; i++){
+		result[i] = a[i] + b[i] + erff(c[i]);
+	}
+
+	delete[] a     ;    
+	delete[] b     ;    
+	delete[] c     ;    
+	delete[] result;    
+	
+
+}
+
 auto open_mp()-> void{
 	omp_set_num_threads(8);
 	#pragma omp parallel
