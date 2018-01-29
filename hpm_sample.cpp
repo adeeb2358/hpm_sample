@@ -132,5 +132,19 @@ auto hpm_sample()->void{
 
 
 auto open_mp()-> void{
+	omp_set_num_threads(8);
+	#pragma omp parallel
+	{
+	/*
+		critical pragma unparallelizes the section
+		here we are telling that this part
+		of the code is critical section
+		one thread access at a time
+	*/	
+	#pragma omp critical	
+		std::cout <<"hello world openMP" \
+		<< omp_get_thread_num() <<"/" \
+		<< omp_get_num_threads() <<"\n";
+	}
 	return;
 }
