@@ -227,6 +227,16 @@ void sync_sample(){
 		nowait:- threads can proceed without
 		waiting waiting for on other threads
 	*/
+
+	printf("\nATOMIC\n");
+	int sum = 0;
+	
+	#pragma omp parallel for num_threads(128)
+	for(int i = 0; i < 100; i++){
+		++sum;
+	}
+	std::cout <<"sum=" << sum <<"\n";
+
 }
 
 auto open_mp()-> void{
