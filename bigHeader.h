@@ -2,6 +2,7 @@
 #define BIG_HEADER_H
 
 #include <iostream>
+#include <cstdio>
 #include <memory>
 //#include <x86intrin.h>
 #include <xmmintrin.h>

@@ -146,6 +146,7 @@ void parallel_for(){
 
 	for(unsigned long int i = 0;i < length; i++){
 		result[i] = a[i] + b[i] + erff(c[i]);
+		std::cout << result[i] ;
 	}
 
 	delete[] a     ;    
@@ -156,20 +157,100 @@ void parallel_for(){
 
 }
 
-auto open_mp()-> void{
-	omp_set_num_threads(8);
+void single_master(){
 	#pragma omp parallel
 	{
+		#pragma omp single
+		
+			printf("gathering input:%d\n",omp_get_thread_num());
+			
+			printf("in parallel on %d\n",omp_get_thread_num());
+
+		#pragma omp barrier
+
+		#pragma omp master
+			printf("output on: %d\n",omp_get_thread_num());
+		
+	}	
+}
+
+
+void sections(){
 	/*
+		sections assign different code block 
+		to different thread
+
+		single block executed only one thread
+		implied barrier in the end
+
+		master -executed by the master thread
+		no barrier in the end
+	*/
+
+
+	#pragma omp parallel sections
+	{
+		#pragma omp section
+		{
+			for(unsigned long int i = 0;i < 1000; i++){
+				std::cout << i ;
+			}
+		}
+		
+		#pragma omp section
+		{
+			for(unsigned long int i = 0;i < 1000; i++){
+				std::cout << static_cast<char>('a'+(i % 26));
+			}
+		}
+	}
+}
+
+/*
+	synchronization in c++
+*/
+
+void sync_sample(){
+	/*
+		critical ->block executed by 
+		one thread at a time
+	
+		atomic:- next memory update
+		is atomic
+
+		ordered:- block executed in same
+		order as if it were sequential
+
+		barrier:- all threads wait untill
+		each one has reached this point
+
+		nowait:- threads can proceed without
+		waiting waiting for on other threads
+	*/
+}
+
+auto open_mp()-> void{
+	omp_set_num_threads(4);
+	/*#pragma omp parallel
+	{
+	
 		critical pragma unparallelizes the section
 		here we are telling that this part
 		of the code is critical section
 		one thread access at a time
-	*/	
+		
 	#pragma omp critical	
 		std::cout <<"hello world openMP" \
 		<< omp_get_thread_num() <<"/" \
 		<< omp_get_num_threads() <<"\n";
-	}
+	}*/
+
+	/*
+		parallel for loop
+	*/
+	//parallel_for();
+	//sections();
+	single_master();
+
 	return;
 }
