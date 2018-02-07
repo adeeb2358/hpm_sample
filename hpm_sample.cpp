@@ -233,10 +233,115 @@ void sync_sample(){
 	
 	#pragma omp parallel for num_threads(128)
 	for(int i = 0; i < 100; i++){
+	/*
+	here the atomic pragma ensures that
+	the value of sum is always 100
+	otherwise we will get a value of 99
+	or 98
+	*/
+	#pragma omp atomic	
 		++sum;
 	}
 	std::cout <<"sum=" << sum <<"\n";
 
+	printf("\nORDERED\n");
+	std::vector<int> squares;
+	#pragma omp parallel for ordered
+	for(int i = 0; i < 20; ++i){
+		printf("%d:%d \t",omp_get_thread_num(),i);
+		int j = i*i;
+	#pragma omp ordered
+	squares.push_back(j);	
+	}
+
+	printf("\n");
+	for(auto v: squares){
+		printf("%d\t",v);
+	}
+
+	printf("\nNOWAIT\n");
+
+	#pragma omp parallel
+	{
+		#pragma omp single nowait
+		{
+			int n;
+			std::cin >>n ;
+			printf("gathering input:%d\n",omp_get_thread_num());
+		}	
+		printf("in parallel on %d\n",omp_get_thread_num());
+
+		#pragma omp barrier
+
+		#pragma omp master
+			printf("output on: %d\n",omp_get_thread_num());
+		
+	}	
+}
+
+
+
+	
+
+void data_sharing_sample(){
+	/*
+	data sharing in openmp
+	
+	shared:- item is accessible by 
+	all the threads simultaneously
+	all variables except loop counter
+	shared by default
+	
+	private:-
+	item is thread-local not initilazed
+	or available outside parallel region
+
+	firstprivate:- like private 
+	but inited to original value
+	
+	lastprivate:-
+	like private except original value
+	updated on exit
+	
+	default:-
+	defines whether by default variables 
+	are shared or not (none)
+
+	note:-
+	By default all variables are private
+
+
+*/
+
+	int i = 10;
+
+	#pragma omp parallel for lastprivate(i)
+	for(int a =0; a<10;a++){
+		printf("thread %d i = %d\n",omp_get_thread_num(),i);
+		i = 1000 + omp_get_thread_num(); 
+	}
+
+	printf("%d\n",i);
+
+	i = 10;
+
+	#pragma omp parallel for private(i)
+	for(int a =0; a<10;a++){
+		printf("thread %d i = %d\n",omp_get_thread_num(),i);
+		i = 1000 + omp_get_thread_num(); 
+	}
+
+	printf("%d\n",i);
+
+	i = 10;
+
+	#pragma omp parallel for 
+	for(int a =0; a<10;a++){
+		printf("thread %d i = %d\n",omp_get_thread_num(),i);
+		i = 1000 + omp_get_thread_num(); 
+	}
+
+	printf("%d\n",i);
 }
 
 auto open_mp()-> void{
@@ -260,7 +365,10 @@ auto open_mp()-> void{
 	*/
 	//parallel_for();
 	//sections();
-	single_master();
+	//single_master();
 
+	//sync_sample();
+	data_sharing_sample();
+	
 	return;
 }

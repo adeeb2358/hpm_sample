@@ -18,7 +18,9 @@
 #include <chrono>
 #include <omp.h>
 
-#include<math.h>
+#include <math.h>
+
+#include <vector>
 
 #endif // BIG_HEADER_H
 
